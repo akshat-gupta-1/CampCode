@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+    --text: #140a00;
+    --backgroundM: #fffcfa;
+    --primaryM: #feb062;
+    --secondaryM: #ffe3c7;
+    --accentM: #f97d01;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+
+    --text: #fff5eb;
+    --backgroundM: #050200;
+    --primaryM: #9d4f01;
+    --secondaryM: #381c00;
+    --accentM: #fe8206;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+body {
+  background-image: url('/imgs/grainy-background.png');
+}
+
+.animated-border {
+  position: absolute;
+  inset: 0;
+  top: 50%;
+  left: 0;
+  height: 100%;
+  background: conic-gradient(
+    transparent 50deg,
+    #f97d01 80deg,
+    transparent 100deg
+  );
+  filter: blur(10px);
+  border-radius: 16px;
+  transform-origin: center;
+  animation: border-animation -0.64s linear 5s infinite;
+  will-change: transform;
+}
+
+.wrapper {
+  padding: 3px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(0deg, rgba(254, 176, 98, 0.32) 0%, #ffe3c7 100%);
+  border-radius: 16px;
+  box-shadow: 0px 15px 25px -4px rgba(255, 227, 199, 0.24);
+  max-width: 1000px;
+  display: block;
+  margin: auto;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  background: white;
+  border: 1px solid hsla(0, 0%, 100%, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  height: 60px;
+}
+
+@keyframes border-animation {
+  0% {
+    transform: translateY(-25%) translateX(40%) rotate(0deg);
+  }
+
+  30% {
+    transform: translateY(0) translateX(0) rotate(90deg) scaleX(0.7);
+  }
+
+  50% {
+    transform: translateY(-25%) translateX(-40%) rotate(180deg);
+  }
+
+  70% {
+    transform: translateY(0) translateX(0) rotate(270deg) scaleX(0.7);
+  }
+
+  to {
+    transform: translateY(-25%) translateX(40%) rotate(1turn);
+  }
+}
