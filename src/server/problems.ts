@@ -13,10 +13,10 @@ interface allProblems {
 interface specificProblem {
   question: {
     questionId: string;
-    questionFrontendId: string;
+    questionFrontendId: number;
     title: string;
     titleSlug: string;
-    difficulty: string;
+    difficulty: 'Easy' | 'Medium' | 'Hard';
     topicTags: {
       name: string;
       slug: string;
@@ -83,7 +83,7 @@ export const problemRouter = router({
       z.object({
         title: z.string(),
         timeTaken: z.number(),
-        date: z.date(),
+        date: z.string().transform((arg) => new Date(arg)),
         frontendId: z.number(),
         difficulty: z.enum(['Easy', 'Medium', 'Hard']),
         tags: z.array(z.string()),
@@ -105,17 +105,24 @@ export const problemRouter = router({
           },
         },
       });
-      req.input.tags.map(async (item) => {
-        const res = await db.tags.findFirst({
-          where: { name: { equals: item } },
-        });
-        if (!res) {
-          const result = await db.tags.create({
-            data: {
-              name: item,
-            },
+      Promise.all(
+        req.input.tags.map(async (item) => {
+          const res = await db.tag.findFirst({
+            where: { name: { equals: item } },
           });
-        } 
-      });
+          if (res) {
+            await db.tag.update({
+              where: { id: res.id },
+              data: {
+                problems: { connect: { id: result.id } },
+              },
+            });
+          } else {
+            await db.tag.create({
+              data: { name: item, problems: { connect: { id: result.id } } },
+            });
+          }
+        })
+      );
     }),
 });

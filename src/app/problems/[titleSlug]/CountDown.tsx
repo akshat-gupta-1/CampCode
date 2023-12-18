@@ -8,10 +8,19 @@ interface Props {
   setTimer: React.Dispatch<React.SetStateAction<number>>;
   time: number;
   setTime: React.Dispatch<React.SetStateAction<number>>;
+  timerRef: React.MutableRefObject<NodeJS.Timeout | undefined>;
+  running: boolean;
+  setRunning: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const CountDown = ({ timer, setTimer, time, setTime }: Props) => {
-  const timerRef = useRef<NodeJS.Timeout>();
-  const [running, setRunning] = useState<boolean>(false);
+const CountDown = ({
+  timer,
+  setTimer,
+  time,
+  setTime,
+  timerRef,
+  running,
+  setRunning,
+}: Props) => {
   const startTimer = () => {
     timerRef.current = setInterval(() => setTime((prev) => prev - 1000), 1000);
     setRunning(true);
@@ -56,13 +65,13 @@ const CountDown = ({ timer, setTimer, time, setTime }: Props) => {
     return () => {
       clearInterval(timerRef.current);
     };
-  }, []);
+  }, [timerRef]);
   useEffect(() => {
     if (time === 0) {
       clearInterval(timerRef.current);
       setRunning(false);
     }
-  }, [time]);
+  }, [time, timerRef,setRunning]);
   return (
     <div>
       <div className="font-lato flex gap-x-6">

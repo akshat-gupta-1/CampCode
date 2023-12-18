@@ -1,20 +1,53 @@
 'use client';
 import { trpc } from '@/app/_trpc/client';
 import { Tags, BookText, CheckCircle } from 'lucide-react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CardSkeleton } from './Skeletons';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-const DataCard = ({ title }: { title: string }) => {
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+const DataCard = ({
+  title,
+  timer,
+  time,
+  setRunning,
+  timerRef,
+}: {
+  title: string;
+  timer: number;
+  time: number;
+  setRunning: React.Dispatch<React.SetStateAction<boolean>>;
+  timerRef: React.MutableRefObject<NodeJS.Timeout | undefined>;
+}) => {
   const [visible, setVisible] = useState<boolean>(false);
   const query = trpc.problems.getSpecificProblem.useQuery(title);
+  const mutation = trpc.problems.saveProblem.useMutation();
+  const handleAdd = () => {
+    clearInterval(timerRef.current);
+    setRunning(false);
+    if (query.data) {
+      const date = new Date();
+      mutation.mutate({
+        title: query.data.data.question.titleSlug,
+        difficulty: query.data.data.question.difficulty,
+        frontendId: Number(query.data.data.question.questionFrontendId),
+        tags: query.data.data.question.topicTags.map((item) => item.slug),
+        date: date.toUTCString(),
+        timeTaken: timer - time,
+      });
+    }
+  };
   if (query.data) {
     return (
       <div>
@@ -80,15 +113,40 @@ const DataCard = ({ title }: { title: string }) => {
           </CardContent>
         </Card>
         <div className="flex justify-end">
-          <Button className="my-10 text-accentM border border-accentM bg-backgroundM hover:bg-accentM hover:text-white">
-            <CheckCircle className="w-4 h-4 mr-2" />
-            Completed
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger className="flex items-center px-4 py-2 rounded-md my-10 text-accentM border border-accentM bg-backgroundM hover:bg-accentM hover:text-white font-medium">
+              {' '}
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Completed
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-text">
+                  Did you completely solved the problem?
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-sand-10">
+                  You spent {(timer - time) / 1000 / 60} minutes to solve the
+                  problem.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="text-sand-10 hover:bg-sand-2 hover:text-sand-11 px-8">
+                  No
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-accentM hover:bg-orange-9 px-8"
+                  onClick={handleAdd}
+                >
+                  Yes
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     );
-  }else{
-    return <CardSkeleton />
+  } else {
+    return <CardSkeleton />;
   }
 };
 
