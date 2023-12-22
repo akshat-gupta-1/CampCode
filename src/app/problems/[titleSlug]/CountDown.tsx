@@ -71,17 +71,21 @@ const CountDown = ({
       clearInterval(timerRef.current);
       setRunning(false);
     }
-  }, [time, timerRef,setRunning]);
+  }, [time, timerRef, setRunning]);
   return (
-    <div>
+    <div className="w-[350px] sm:w-full">
       <div className="font-lato flex gap-x-6">
         <div>
-          <span className="text-[140px] px-2">{getMinutes(time)}</span>
-          <span className="text-6xl px-2">m</span>
+          <span className="sm:text-[140px] px-2 text-[90px]">
+            {getMinutes(time)}
+          </span>
+          <span className="sm:text-6xl px-2 text-5xl">m</span>
         </div>
         <div>
-          <span className="text-[140px] px-2">{getSeconds(time)}</span>
-          <span className="text-6xl px-2">s</span>
+          <span className="sm:text-[140px] px-2 text-[90px]">
+            {getSeconds(time)}
+          </span>
+          <span className="sm:text-6xl px-2 text-5xl">s</span>
         </div>
       </div>
       <div className="flex justify-center my-8 gap-x-10">
@@ -116,7 +120,7 @@ const CountDown = ({
           />
         </button>
       </div>
-      <div className="flex gap-x-8 justify-center text-lg">
+      <div className="flex gap-x-8 justify-center text-lg  flex-wrap gap-y-4">
         <button
           onClick={() => onClickHandler(20 * 60 * 1000)}
           className={cn('px-4 py-1  rounded-full', {

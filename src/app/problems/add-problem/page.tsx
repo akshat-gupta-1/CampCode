@@ -26,7 +26,7 @@ const Page = () => {
     });
   }, [state]);
   return (
-    <div className="max-w-3xl mx-auto my-16 px-8 md:px-0">
+    <div className="max-w-3xl mx-auto my-16 md:px-0">
       <h3 className="text-2xl font-semibold font-geistSans text-text py-6 border-b border-sand-6 flex gap-x-2">
         <span>Add New Problem</span>
         <Image src={'/svg/add.svg'} width={24} height={24} alt="add svg" />

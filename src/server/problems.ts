@@ -90,39 +90,60 @@ export const problemRouter = router({
       })
     )
     .mutation(async (req) => {
-      const result = await db.problem.create({
+      const solvedResult = await db.solved.create({
         data: {
+          dateSolved: req.input.date,
+          timeTaken: req.input.timeTaken,
+          Completed: 'Yes',
+        },
+      });
+      const result = await db.problem.upsert({
+        where: {
+          title: req.input.title,
+        },
+        create: {
           title: req.input.title,
           difficulty: req.input.difficulty,
           number: req.input.frontendId,
+          userId: req.ctx.session.user.id,
           Solved: {
-            create: {
-              dateSolved: req.input.date,
-              timeTaken: req.input.timeTaken,
-              Completed: 'Yes',
-              userId: req.ctx.session.user.id,
+            connect: {
+              id: solvedResult.id,
             },
           },
         },
+        update: {
+          Solved: {
+            connect: {
+              id: solvedResult.id,
+            },
+          },
+        },
+        include: {
+          tags: true,
+        },
       });
-      Promise.all(
-        req.input.tags.map(async (item) => {
-          const res = await db.tag.findFirst({
-            where: { name: { equals: item } },
-          });
-          if (res) {
-            await db.tag.update({
-              where: { id: res.id },
-              data: {
-                problems: { connect: { id: result.id } },
-              },
+      console.log(result);
+      if (result.tags.length == 0) {
+        Promise.all(
+          req.input.tags.map(async (item) => {
+            const res = await db.tag.findFirst({
+              where: { name: { equals: item } },
             });
-          } else {
-            await db.tag.create({
-              data: { name: item, problems: { connect: { id: result.id } } },
-            });
-          }
-        })
-      );
+            if (res) {
+              await db.tag.update({
+                where: { id: res.id },
+                data: {
+                  problems: { connect: { id: result.id } },
+                },
+              });
+            } else {
+              await db.tag.create({
+                data: { name: item, problems: { connect: { id: result.id } } },
+              });
+            }
+          })
+        );
+      }
     }),
 });

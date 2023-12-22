@@ -34,8 +34,6 @@ const DataCard = ({
   const query = trpc.problems.getSpecificProblem.useQuery(title);
   const mutation = trpc.problems.saveProblem.useMutation();
   const handleAdd = () => {
-    clearInterval(timerRef.current);
-    setRunning(false);
     if (query.data) {
       const date = new Date();
       mutation.mutate({
@@ -50,7 +48,7 @@ const DataCard = ({
   };
   if (query.data) {
     return (
-      <div>
+      <div className="sm:w-[400px] w-[350px] ">
         <Card className="bg-backgroundM">
           <CardHeader>
             <CardTitle className="text-xl">
@@ -114,7 +112,13 @@ const DataCard = ({
         </Card>
         <div className="flex justify-end">
           <AlertDialog>
-            <AlertDialogTrigger className="flex items-center px-4 py-2 rounded-md my-10 text-accentM border border-accentM bg-backgroundM hover:bg-accentM hover:text-white font-medium">
+            <AlertDialogTrigger
+              className="flex items-center px-4 py-2 rounded-md my-10 text-accentM border border-accentM bg-backgroundM hover:bg-accentM hover:text-white font-medium"
+              onClick={() => {
+                clearInterval(timerRef.current);
+                setRunning(false);
+              }}
+            >
               {' '}
               <CheckCircle className="w-4 h-4 mr-2" />
               Completed
@@ -125,8 +129,8 @@ const DataCard = ({
                   Did you completely solved the problem?
                 </AlertDialogTitle>
                 <AlertDialogDescription className="text-sand-10">
-                  You spent {(timer - time) / 1000 / 60} minutes to solve the
-                  problem.
+                  You spent {Math.floor((timer - time) / 1000 / 60)} minutes to
+                  solve the problem.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

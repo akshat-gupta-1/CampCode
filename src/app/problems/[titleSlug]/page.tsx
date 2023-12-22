@@ -9,7 +9,7 @@ const Page = ({ params }: { params: { titleSlug: string } }) => {
   const timerRef = useRef<NodeJS.Timeout>();
   const [running, setRunning] = useState<boolean>(false);
   return (
-    <div className="my-32 grid grid-cols-[minmax(500px,_1fr)_minmax(200px,_400px)] font-inter">
+    <div className="lg:my-32 sm:my-16 my-10 grid lg:grid-cols-[minmax(500px,_1fr)_minmax(200px,_400px)] grid-cols-1 font-inter sm:gap-y-20 gap-y-14">
       <div className="place-self-center">
         <CountDown
           timer={timer}
@@ -21,13 +21,15 @@ const Page = ({ params }: { params: { titleSlug: string } }) => {
           setRunning={setRunning}
         />
       </div>
-      <DataCard
-        title={params.titleSlug}
-        timer={timer}
-        time={time}
-        setRunning={setRunning}
-        timerRef={timerRef}
-      />
+      <div className="justify-self-center">
+        <DataCard
+          title={params.titleSlug}
+          timer={timer}
+          time={time}
+          setRunning={setRunning}
+          timerRef={timerRef}
+        />
+      </div>
     </div>
   );
 };

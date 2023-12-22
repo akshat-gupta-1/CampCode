@@ -33,7 +33,7 @@ export default async function RootLayout({
         <AuthProvider>
           <Provider>
             <Navbar />
-            <div className="font-inter max-w-screen-xl md:px-8 px-0 mx-auto">
+            <div className="font-inter max-w-screen-xl px-8 mx-auto">
               {children}
             </div>
           </Provider>

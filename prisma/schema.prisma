@@ -55,7 +55,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Solved        Solved?
+  Problem       Problem[]
   Revision      Revision?
 }
 
@@ -87,21 +87,21 @@ model Tag {
 model Problem {
   id         String     @id @unique @default(cuid())
   number     Int
-  title      String
+  title      String     @unique
   tags       Tag[]
   difficulty Difficulty
   Solved     Solved[]
   Revision   Revision?
+  user       User       @relation(fields: [userId], references: [id])
+  userId     String     @unique
 }
 
 model Solved {
   id         String   @id @unique @default(cuid())
   timeTaken  Int
   dateSolved DateTime
-  problem    Problem  @relation(fields: [problemId], references: [id])
-  problemId  String
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String   @unique
+  problem    Problem? @relation(fields: [problemId], references: [id])
+  problemId  String?
   Completed  Status?
 }
 

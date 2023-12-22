@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 export const CardSkeleton = () => {
   return (
-    <div>
+    <div className="w-[350px] sm:w-[400px]">
       <Card>
         <CardHeader>
           <div>
