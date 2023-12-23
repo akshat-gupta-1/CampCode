@@ -6,9 +6,12 @@ import {
   Book,
   History,
   CheckCircle2,
+  Trash2,
+  ArrowUpDown,
 } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 export type Problem = {
   id: string;
   title: string;
@@ -38,14 +41,20 @@ export const columns: ColumnDef<Problem>[] = [
   },
   {
     accessorKey: 'title',
-    header: () => {
+    header: ({ column }) => {
       return (
-        <div className="flex items-center">
+        <Button
+          variant={'ghost'}
+          className="hover:bg-sand-3 px-2 py-1"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
           <File className="w-4 h-4 mr-1" />
           Problem
-        </div>
+          <ArrowUpDown className="w-4 h-4 ml-1" />
+        </Button>
       );
     },
+    sortingFn: 'alphanumeric',
   },
   {
     accessorKey: 'tags',
@@ -60,11 +69,11 @@ export const columns: ColumnDef<Problem>[] = [
     cell: ({ row }) => {
       const tags: string[] = row.getValue('tags');
       return (
-        <div className="flex flex-wrap text-sm gap-y-2">
+        <div className="flex flex-wrap text-sm gap-y-1">
           {tags.map((item, index) => (
             <span
               key={index}
-              className="px-2 py-1 bg-orange-3 text-orange-10 mx-2 rounded-md"
+              className="px-2 py-1 bg-orange-3 text-orange-10 mx-1 rounded-md"
             >
               {item}
             </span>
@@ -75,12 +84,17 @@ export const columns: ColumnDef<Problem>[] = [
   },
   {
     accessorKey: 'difficulty',
-    header: () => {
+    header: ({ column }) => {
       return (
-        <div className="flex items-center">
+        <Button
+          variant={'ghost'}
+          className="hover:bg-sand-3 px-2 py-1"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
           <Book className="w-4 h-4 mr-1" />
           Difficulty
-        </div>
+          <ArrowUpDown className="w-4 h-4 ml-1" />
+        </Button>
       );
     },
     cell: ({ row }) => {
@@ -97,15 +111,32 @@ export const columns: ColumnDef<Problem>[] = [
         </div>
       );
     },
+    sortingFn: 'difficulty',
   },
   {
     accessorKey: 'practiceDate',
-    header: () => {
+    header: ({ column }) => {
       return (
-        <div className="flex items-center">
+        <Button
+          variant={'ghost'}
+          className="hover:bg-sand-3 px-2 py-1"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
           <History className="w-4 h-4 mr-1" />
           Last Practice
-        </div>
+          <ArrowUpDown className="w-4 h-4 ml-1" />
+        </Button>
+      );
+    },
+    sortingFn: 'datetime',
+  },
+  {
+    id: 'delete',
+    cell: ({ row }) => {
+      return (
+        <button className="text-sand-9 px-2 py-2 hover:bg-sand-3 rounded-lg">
+          <Trash2 className="w-5 h-5" />
+        </button>
       );
     },
   },
