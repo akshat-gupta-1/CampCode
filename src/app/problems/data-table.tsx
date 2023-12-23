@@ -27,6 +27,18 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from '@/components/ui/command';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
   Table,
   TableBody,
   TableCell,
@@ -35,18 +47,30 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { ArrowRight, ArrowLeft, Search, ChevronDown } from 'lucide-react';
+import {
+  ArrowRight,
+  ArrowLeft,
+  Search,
+  ChevronDown,
+  CheckIcon,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
-
+const tags = [
+  { value: 'array', label: 'array' },
+  { value: 'heap', label: 'Heap' },
+  { value: 'abc', label: 'abc' },
+];
 export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter();
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState('');
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -105,42 +129,12 @@ export function DataTable<TData, TValue>({
               className=" placeholder:text-sand-9 outline-none bg-backgroundM w-full text-sm"
             />
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="bg-backgroundM border-sand-5 text-sand-9 hover:bg-sand-3 focus-visible:ring-primaryM "
-              >
-                Columns
-                <ChevronDown className="w-4 h-4 ml-1" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="center" className="bg-backgroundM">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize focus:bg-sand-3"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
           <Select
             onValueChange={(value) => {
               table.getColumn('difficulty')?.setFilterValue(value);
             }}
           >
-            <SelectTrigger className="bg-backgroundM text-sand-9 font-medium min-w-[120px] focus-visible:ring-primaryM hover:bg-sand-3 hover:text-text">
+            <SelectTrigger className="bg-backgroundM text-sand-9 font-medium min-w-[160px] focus-visible:ring-primaryM hover:bg-sand-3 hover:text-text focus:ring-primaryM">
               <SelectValue placeholder="Difficulty" />
             </SelectTrigger>
             <SelectContent className="font-inter ">
@@ -164,6 +158,82 @@ export function DataTable<TData, TValue>({
               </SelectItem>
             </SelectContent>
           </Select>
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="min-w-[200px] justify-between bg-backgroundM text-sand-9 hover:bg-sand-3 hover:text-text focus-visible:ring-primaryM"
+              >
+                {value
+                  ? tags.find((tag) => tag.value === value)?.label
+                  : 'Select Tag'}
+                <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[200px] p-0">
+              <Command className="bg-backgroundM font-inter">
+                <CommandInput placeholder="Search Tag..." className="h-9" />
+                <CommandEmpty>No tag found.</CommandEmpty>
+                <CommandGroup>
+                  {tags.map((tag) => (
+                    <CommandItem
+                      key={tag.value}
+                      value={tag.value}
+                      onSelect={(currentValue) => {
+                        table.getColumn('tags')?.setFilterValue(tag.value);
+                        setValue(currentValue === value ? '' : currentValue);
+                        setOpen(false);
+                      }}
+                      className="aria-selected:bg-sand-3"
+                    >
+                      {tag.label}
+                      <CheckIcon
+                        className={cn(
+                          'ml-auto h-4 w-4',
+                          value === tag.value ? 'opacity-100' : 'opacity-0'
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="bg-backgroundM border-sand-5 text-sand-9 hover:bg-sand-3 focus-visible:ring-primaryM "
+              >
+                Columns
+                <ChevronDown className="w-4 h-4 ml-1" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="center"
+              className="bg-backgroundM font-inter"
+            >
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize focus:bg-sand-3"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <Button
           variant={'customSolid'}

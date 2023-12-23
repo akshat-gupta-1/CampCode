@@ -81,6 +81,8 @@ export const columns: ColumnDef<Problem>[] = [
         </div>
       );
     },
+    enableColumnFilter: true,
+    filterFn: 'arrIncludes',
   },
   {
     accessorKey: 'difficulty',

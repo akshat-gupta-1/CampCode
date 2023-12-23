@@ -27,6 +27,14 @@ const page = () => {
       status: 'Yes',
       practiceDate: 'erjefewaafafafafaf',
     },
+    {
+      id: '3143',
+      title: '1.Hello this is akshat',
+      tags: ['abc'],
+      difficulty: 'Hard',
+      status: 'Yes',
+      practiceDate: 'erjefewaafafafafaf',
+    },
   ];
   return (
     <div className="my-12 flex flex-col gap-y-8">
