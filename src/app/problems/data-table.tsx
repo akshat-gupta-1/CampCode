@@ -18,6 +18,13 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -84,8 +91,8 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex justify-between">
-        <div className="flex gap-x-8">
-          <div className="flex items-center py-2 mb-4 max-w-sm bg-backgroundM border border-sand-5 rounded-lg px-2 ring-offset-backgroundM focus-within:ring-2 focus-within:ring-primaryM focus-within:ring-offset-2">
+        <div className="flex gap-x-6">
+          <div className="flex items-center py-2 mb-4 max-w-sm min-w-[250px] bg-backgroundM border border-sand-5 rounded-lg px-2 ring-offset-backgroundM focus-within:ring-2 focus-within:ring-primaryM focus-within:ring-offset-2">
             <Search className="w-5 h-5 mr-2 text-sand-9" />
             <input
               placeholder="Search Problem"
@@ -128,6 +135,35 @@ export function DataTable<TData, TValue>({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
+          <Select
+            onValueChange={(value) => {
+              table.getColumn('difficulty')?.setFilterValue(value);
+            }}
+          >
+            <SelectTrigger className="bg-backgroundM text-sand-9 font-medium min-w-[120px] focus-visible:ring-primaryM hover:bg-sand-3 hover:text-text">
+              <SelectValue placeholder="Difficulty" />
+            </SelectTrigger>
+            <SelectContent className="font-inter ">
+              <SelectItem
+                value="Easy"
+                className="text-green-500 font-medium focus:bg-sand-3 focus:text-green-500"
+              >
+                <span className="font-medium">Easy</span>
+              </SelectItem>
+              <SelectItem
+                value="Medium"
+                className="text-yellow-400 font-medium focus:bg-sand-3 focus:text-yellow-400"
+              >
+                <span className="font-medium">Medium</span>
+              </SelectItem>
+              <SelectItem
+                value="Hard"
+                className="text-red-500 focus:bg-sand-3 focus:text-red-500"
+              >
+                <span className="font-medium">Hard</span>
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <Button
           variant={'customSolid'}
