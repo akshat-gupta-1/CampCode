@@ -11,6 +11,7 @@ const Page = () => {
   const [state, setState] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const [selectedItem, setSelectedItem] = useState<number>(0);
+  const [titleSlug, setTitleSlug] = useState<string>('');
   const ref = useRef<HTMLDivElement | null>(null);
   const refUL = useRef<HTMLUListElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -35,11 +36,7 @@ const Page = () => {
         action=""
         onSubmit={(e) => {
           e.preventDefault();
-          const titleSlug = search
-            .toLowerCase()
-            .replace(/ /g, '-')
-            .replace(/\(/g, '')
-            .replace(/\)/g, '');
+          console.log(titleSlug);
           router.push(`${titleSlug}`);
         }}
       >
@@ -79,6 +76,11 @@ const Page = () => {
                       refUL.current?.querySelectorAll('li')[selectedItem]
                         .innerText as string
                     );
+                    setTitleSlug(
+                      refUL.current
+                        ?.querySelectorAll('li')
+                        [selectedItem].getAttribute('data-key') as string
+                    );
                     setState(false);
                   } else if (e.key === 'Enter') {
                     e.preventDefault();
@@ -111,6 +113,7 @@ const Page = () => {
                     .map((item, index) => (
                       <li
                         key={index}
+                        data-key={item.titleSlug}
                         className={cn(
                           ' p-4 hover:bg-secondaryM cursor-pointer',
                           {
@@ -120,6 +123,7 @@ const Page = () => {
                         onClick={() => {
                           setSearch(item.title);
                           setState(false);
+                          setTitleSlug(item.titleSlug);
                         }}
                       >
                         {item.title}

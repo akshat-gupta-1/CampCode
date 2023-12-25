@@ -2,6 +2,7 @@ import { router, protectedProcedure } from '@/server/trpc';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { request, gql } from 'graphql-request';
+import { dataTableRouter } from './dataTable';
 interface allProblems {
   problemsetQuestionList: {
     questions: {
@@ -123,7 +124,6 @@ export const problemRouter = router({
           tags: true,
         },
       });
-      console.log(result);
       if (result.tags.length == 0) {
         Promise.all(
           req.input.tags.map(async (item) => {
@@ -146,4 +146,5 @@ export const problemRouter = router({
         );
       }
     }),
+  dataTable: dataTableRouter,
 });

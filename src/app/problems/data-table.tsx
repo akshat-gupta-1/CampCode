@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { trpc } from '../_trpc/client';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -53,17 +54,13 @@ import {
   Search,
   ChevronDown,
   CheckIcon,
+  Ghost,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
-const tags = [
-  { value: 'array', label: 'array' },
-  { value: 'heap', label: 'Heap' },
-  { value: 'abc', label: 'abc' },
-];
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -111,7 +108,7 @@ export function DataTable<TData, TValue>({
       },
     },
   });
-
+  const { data: tags } = trpc.problems.dataTable.getTags.useQuery();
   return (
     <div>
       <div className="flex justify-between">
@@ -167,7 +164,7 @@ export function DataTable<TData, TValue>({
                 className="min-w-[200px] justify-between bg-backgroundM text-sand-9 hover:bg-sand-3 hover:text-text focus-visible:ring-primaryM"
               >
                 {value
-                  ? tags.find((tag) => tag.value === value)?.label
+                  ? tags?.find((tag) => tag.value === value)?.label
                   : 'Select Tag'}
                 <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
               </Button>
@@ -177,7 +174,7 @@ export function DataTable<TData, TValue>({
                 <CommandInput placeholder="Search Tag..." className="h-9" />
                 <CommandEmpty>No tag found.</CommandEmpty>
                 <CommandGroup>
-                  {tags.map((tag) => (
+                  {tags?.map((tag) => (
                     <CommandItem
                       key={tag.value}
                       value={tag.value}
@@ -286,7 +283,10 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                <div className="flex justify-center">
+                  <Ghost className="w-5 h-5 mr-2" />
+                  No results.
+                </div>
               </TableCell>
             </TableRow>
           )}

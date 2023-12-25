@@ -6,6 +6,8 @@ import { CardSkeleton } from './Skeletons';
 import { cn } from '@/lib/utils';
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,18 +33,34 @@ const DataCard = ({
   timerRef: React.MutableRefObject<NodeJS.Timeout | undefined>;
 }) => {
   const [visible, setVisible] = useState<boolean>(false);
+  const router = useRouter();
+  const utils = trpc.useUtils();
   const query = trpc.problems.getSpecificProblem.useQuery(title);
-  const mutation = trpc.problems.saveProblem.useMutation();
+  const mutation = trpc.problems.saveProblem.useMutation({
+    onSuccess() {
+      utils.problems.invalidate();
+    },
+  });
   const handleAdd = () => {
     if (query.data) {
       const date = new Date();
-      mutation.mutate({
+      const result = mutation.mutateAsync({
         title: query.data.data.question.titleSlug,
         difficulty: query.data.data.question.difficulty,
         frontendId: Number(query.data.data.question.questionFrontendId),
         tags: query.data.data.question.topicTags.map((item) => item.slug),
         date: date.toUTCString(),
         timeTaken: timer - time,
+      });
+      toast.promise(result, {
+        loading: 'Saving Problem',
+        success: (data) => {
+          return 'Problem Successfully saved';
+        },
+        error: 'Error',
+      });
+      result.then((value) => {
+        router.push('/problems');
       });
     }
   };
