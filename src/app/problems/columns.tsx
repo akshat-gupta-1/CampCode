@@ -10,7 +10,19 @@ import {
   ArrowUpDown,
   MoreHorizontal,
   Check,
+  FileText,
+  X,
 } from 'lucide-react';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerDescription,
+  DrawerTitle,
+  DrawerTrigger,
+  DrawerClose,
+} from '@/components/ui/drawer';
+import { Textarea } from '@/components/ui/textarea';
 import { ColumnDef } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -35,6 +47,7 @@ export type Problem = {
   difficulty: 'Easy' | 'Medium' | 'Hard';
   status: ('Yes' | 'No' | null)[];
   practiceDate: string[];
+  notes: string | null;
 };
 import Link from 'next/link';
 import { trpc } from '../_trpc/client';
@@ -243,6 +256,81 @@ export const columns: ColumnDef<Problem>[] = [
         >
           <Trash2 className="w-5 h-5" />
         </button>
+      );
+    },
+  },
+  {
+    id: 'notes',
+    cell: ({ row }) => {
+      const rowData = row.original;
+      const utils = trpc.useUtils();
+      const mutation = trpc.problems.dataTable.addNotes.useMutation({
+        onSuccess() {
+          utils.problems.invalidate();
+        },
+      });
+      return (
+        <Drawer>
+          <DrawerTrigger asChild>
+            <button className="text-sand-9 px-2 py-2 hover:bg-sand-3 rounded-lg">
+              <FileText className="w-5 h-5" />
+            </button>
+          </DrawerTrigger>
+          <DrawerContent className="font-inter bg-backgroundM h-[700px]">
+            <div className="mx-auto w-full max-w-screen-lg h-full relative">
+              <DrawerHeader>
+                <DrawerTitle className="underline decoration-wavy underline-offset-6 text-3xl decoration-primaryM">
+                  Add Notes
+                </DrawerTitle>
+                <DrawerDescription className="text-sand-9">
+                  Short notes to refrence later.
+                </DrawerDescription>
+              </DrawerHeader>
+              <div className="w-full h-full">
+                <Textarea
+                  id="notes"
+                  defaultValue={rowData.notes ? rowData.notes : ''}
+                  placeholder="Write something....."
+                  className="focus-within:ring-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-backgroundM resize-none h-full placeholder:text-sand-9 p-4 text-lg placeholder:text-lg"
+                />
+              </div>
+              <div className="absolute sm:top-4 top-20 right-0 flex gap-x-4 ">
+                <button
+                  className="text-sand-9 hover:bg-orange-3 rounded-md px-2 py-1 hover:text-accentM text-sm"
+                  id="saveButton"
+                  onClick={() => {
+                    const input = document.getElementById(
+                      'notes'
+                    ) as HTMLTextAreaElement;
+                    if (input.value && input.value) {
+                      console.log('hello');
+                      const result = mutation.mutateAsync({
+                        id: rowData.id,
+                        notes: input.value,
+                      });
+                      toast.promise(result, {
+                        loading: 'Saving note..',
+                        success: 'Successfully saved!',
+                        error: 'Error while saving!',
+                      });
+                      result.then((value) => {
+                        document.getElementById('close')?.click();
+                      });
+                    }
+                  }}
+                >
+                  Save
+                </button>
+                <DrawerClose
+                  className=" text-sand-9 hover:bg-sand-3 rounded-md px-2 py-1 hover:text-sand-11 text-sm"
+                  id="close"
+                >
+                  Close
+                </DrawerClose>
+              </div>
+            </div>
+          </DrawerContent>
+        </Drawer>
       );
     },
   },

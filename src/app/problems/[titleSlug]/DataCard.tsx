@@ -4,8 +4,7 @@ import { Tags, BookText, CheckCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CardSkeleton } from './Skeletons';
 import { cn } from '@/lib/utils';
-import { useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import {
@@ -19,6 +18,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import AIPrompt from './AIPrompt';
 const DataCard = ({
   title,
   timer,
@@ -128,7 +128,8 @@ const DataCard = ({
             </div>
           </CardContent>
         </Card>
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-x-4">
+          <AIPrompt />
           <AlertDialog>
             <AlertDialogTrigger
               className="flex items-center px-4 py-2 rounded-md my-10 text-accentM border border-accentM bg-backgroundM hover:bg-accentM hover:text-white font-medium"

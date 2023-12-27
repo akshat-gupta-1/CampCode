@@ -107,12 +107,17 @@ export function DataTable<TData, TValue>({
         return difficultyA - difficultyB;
       },
     },
+    initialState: {
+      pagination: {
+        pageSize: 25,
+      },
+    },
   });
   const { data: tags } = trpc.problems.dataTable.getTags.useQuery();
   return (
     <div>
-      <div className="flex justify-between">
-        <div className="flex gap-x-6">
+      <div className="grid sm:grid-cols-[1fr_200px] grid-cols-1 xl:mb-0 mb-4 gap-y-3">
+        <div className="grid xl:grid-cols-[250px_1fr] grid-cols-1 gap-x-2">
           <div className="flex items-center py-2 mb-4 max-w-sm min-w-[250px] bg-backgroundM border border-sand-5 rounded-lg px-2 ring-offset-backgroundM focus-within:ring-2 focus-within:ring-primaryM focus-within:ring-offset-2">
             <Search className="w-5 h-5 mr-2 text-sand-9" />
             <input
@@ -126,119 +131,150 @@ export function DataTable<TData, TValue>({
               className=" placeholder:text-sand-9 outline-none bg-backgroundM w-full text-sm"
             />
           </div>
-          <Select
-            onValueChange={(value) => {
-              table.getColumn('difficulty')?.setFilterValue(value);
-            }}
-          >
-            <SelectTrigger className="bg-backgroundM text-sand-9 font-medium min-w-[160px] focus-visible:ring-primaryM hover:bg-sand-3 hover:text-text focus:ring-primaryM">
-              <SelectValue placeholder="Difficulty" />
-            </SelectTrigger>
-            <SelectContent className="font-inter ">
-              <SelectItem
-                value="Easy"
-                className="text-green-500 font-medium focus:bg-sand-3 focus:text-green-500"
-              >
-                <span className="font-medium">Easy</span>
-              </SelectItem>
-              <SelectItem
-                value="Medium"
-                className="text-yellow-400 font-medium focus:bg-sand-3 focus:text-yellow-400"
-              >
-                <span className="font-medium">Medium</span>
-              </SelectItem>
-              <SelectItem
-                value="Hard"
-                className="text-red-500 focus:bg-sand-3 focus:text-red-500"
-              >
-                <span className="font-medium">Hard</span>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="min-w-[200px] justify-between bg-backgroundM text-sand-9 hover:bg-sand-3 hover:text-text focus-visible:ring-primaryM"
-              >
-                {value
-                  ? tags?.find((tag) => tag.value === value)?.label
-                  : 'Select Tag'}
-                <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
-              <Command className="bg-backgroundM font-inter">
-                <CommandInput placeholder="Search Tag..." className="h-9" />
-                <CommandEmpty>No tag found.</CommandEmpty>
-                <CommandGroup>
-                  {tags?.map((tag) => (
-                    <CommandItem
-                      key={tag.value}
-                      value={tag.value}
-                      onSelect={(currentValue) => {
-                        table.getColumn('tags')?.setFilterValue(tag.value);
-                        setValue(currentValue === value ? '' : currentValue);
-                        setOpen(false);
-                      }}
-                      className="aria-selected:bg-sand-3"
-                    >
-                      {tag.label}
-                      <CheckIcon
-                        className={cn(
-                          'ml-auto h-4 w-4',
-                          value === tag.value ? 'opacity-100' : 'opacity-0'
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </Command>
-            </PopoverContent>
-          </Popover>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="bg-backgroundM border-sand-5 text-sand-9 hover:bg-sand-3 focus-visible:ring-primaryM "
-              >
-                Columns
-                <ChevronDown className="w-4 h-4 ml-1" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="center"
-              className="bg-backgroundM font-inter"
+          <div className="flex gap-x-3 md:flex-nowrap flex-wrap gap-y-2">
+            <Select
+              onValueChange={(value) => {
+                table.getColumn('difficulty')?.setFilterValue(value);
+              }}
             >
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize focus:bg-sand-3"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <SelectTrigger className="bg-backgroundM text-sand-9 font-medium min-w-[160px] max-w-[160px] focus-visible:ring-primaryM hover:bg-sand-3 hover:text-text focus:ring-primaryM">
+                <SelectValue placeholder="Difficulty" />
+              </SelectTrigger>
+              <SelectContent className="font-inter ">
+                <SelectItem
+                  value="Easy"
+                  className="text-green-500 font-medium focus:bg-sand-3 focus:text-green-500"
+                >
+                  <span className="font-medium">Easy</span>
+                </SelectItem>
+                <SelectItem
+                  value="Medium"
+                  className="text-yellow-400 font-medium focus:bg-sand-3 focus:text-yellow-400"
+                >
+                  <span className="font-medium">Medium</span>
+                </SelectItem>
+                <SelectItem
+                  value="Hard"
+                  className="text-red-500 focus:bg-sand-3 focus:text-red-500"
+                >
+                  <span className="font-medium">Hard</span>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="min-w-[160px] justify-between bg-backgroundM text-sand-9 hover:bg-sand-3 hover:text-text focus-visible:ring-primaryM"
+                >
+                  {value
+                    ? tags?.find((tag) => tag.value === value)?.label
+                    : 'Select Tag'}
+                  <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[200px] p-0">
+                <Command className="bg-backgroundM font-inter">
+                  <CommandInput placeholder="Search Tag..." className="h-9" />
+                  <CommandEmpty>No tag found.</CommandEmpty>
+                  <CommandGroup>
+                    {tags?.map((tag) => (
+                      <CommandItem
+                        key={tag.value}
+                        value={tag.value}
+                        onSelect={(currentValue) => {
+                          table.getColumn('tags')?.setFilterValue(tag.value);
+                          setValue(currentValue === value ? '' : currentValue);
+                          setOpen(false);
+                        }}
+                        className="aria-selected:bg-sand-3"
+                      >
+                        {tag.label}
+                        <CheckIcon
+                          className={cn(
+                            'ml-auto h-4 w-4',
+                            value === tag.value ? 'opacity-100' : 'opacity-0'
+                          )}
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </Command>
+              </PopoverContent>
+            </Popover>
+            <Select
+              onValueChange={(value) => {
+                table.setPageSize(Number(value));
+              }}
+              defaultValue="25"
+            >
+              <SelectTrigger className="bg-backgroundM text-sand-9 font-medium min-w-[160px] max-w-[160px] focus-visible:ring-primaryM hover:bg-sand-3 hover:text-text focus:ring-primaryM">
+                <SelectValue placeholder="Page Size" />
+              </SelectTrigger>
+              <SelectContent className="font-inter ">
+                <SelectItem value="10" className="font-medium focus:bg-sand-3 ">
+                  <span className="font-medium">Show 10</span>
+                </SelectItem>
+                <SelectItem value="25" className=" font-medium focus:bg-sand-3">
+                  <span className="font-medium">Show 25</span>
+                </SelectItem>
+                <SelectItem value="50" className="focus:bg-sand-3">
+                  <span className="font-medium">Show 50</span>
+                </SelectItem>
+                <SelectItem value="100" className="focus:bg-sand-3">
+                  <span className="font-medium">Show 100</span>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                asChild
+                className="min-w-[160px] max-w-[160px]"
+              >
+                <Button
+                  variant="outline"
+                  className="bg-backgroundM border-sand-5 text-sand-9 hover:bg-sand-3 focus-visible:ring-primaryM flex justify-between"
+                >
+                  Columns
+                  <ChevronDown className="w-4 h-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="center"
+                className="bg-backgroundM font-inter w-[160px]"
+              >
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize focus:bg-sand-3"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-        <Button
-          variant={'customSolid'}
-          className="rounded-md"
-          onClick={() => router.push('/problems/add-problem')}
-        >
-          Add Problem
-        </Button>
+        <div className="sm:justify-self-end ">
+          <Button
+            variant={'customSolid'}
+            className="rounded-md"
+            onClick={() => router.push('/problems/add-problem')}
+          >
+            Add Problem
+          </Button>
+        </div>
       </div>
       <Table>
         <TableHeader>
@@ -274,7 +310,13 @@ export function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && 'selected'}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className={cn({
+                      'w-[50px] p-2': cell.column.id === 'delete',
+                      'w-[50px] pr-6 pl-2 py-2': cell.column.id === 'notes',
+                    })}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

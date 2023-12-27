@@ -26,6 +26,7 @@ export const dataTableRouter = router({
         difficulty: item.difficulty,
         status: item.Solved.map((item) => item.Completed),
         practiceDate: item.Solved.map((item) => item.dateSolved.toUTCString()),
+        notes: item.notes,
       };
     });
     return data;
@@ -34,5 +35,15 @@ export const dataTableRouter = router({
     .input(z.object({ id: z.string() }))
     .mutation(async (req) => {
       await db.problem.delete({ where: { id: req.input.id } });
+    }),
+  addNotes: protectedProcedure
+    .input(z.object({ id: z.string(), notes: z.string() }))
+    .mutation(async (req) => {
+      await db.problem.update({
+        where: { id: req.input.id },
+        data: {
+          notes: req.input.notes,
+        },
+      });
     }),
 });

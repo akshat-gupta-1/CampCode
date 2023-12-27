@@ -4,7 +4,6 @@ import { Zap, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { trpc } from '@/app/_trpc/client';
 import { useRouter } from 'next/navigation';
-import { SvgSpinnersBarsRotateFade } from '@/components/Loader';
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 const Page = () => {
@@ -89,7 +88,12 @@ const Page = () => {
                 placeholder="Enter problem title..."
               />
               {query.isFetching && (
-                <SvgSpinnersBarsRotateFade height={28} width={28} />
+                <Image
+                  src="/svg/Loader.svg"
+                  height={28}
+                  width={28}
+                  alt="Loader"
+                />
               )}
               {search.length > 0 && query.data && (
                 <X

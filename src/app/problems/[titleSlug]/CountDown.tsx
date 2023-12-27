@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw } from 'lucide-react';
-import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import useSound from 'use-sound';
+import timer_sound from '../../../../public/audio/timer_sound.mp3';
 interface Props {
   timer: number;
   setTimer: React.Dispatch<React.SetStateAction<number>>;
@@ -21,6 +22,7 @@ const CountDown = ({
   running,
   setRunning,
 }: Props) => {
+  const [play] = useSound(timer_sound);
   const startTimer = () => {
     timerRef.current = setInterval(() => setTime((prev) => prev - 1000), 1000);
     setRunning(true);
@@ -68,10 +70,11 @@ const CountDown = ({
   }, [timerRef]);
   useEffect(() => {
     if (time === 0) {
+      play();
       clearInterval(timerRef.current);
       setRunning(false);
     }
-  }, [time, timerRef, setRunning]);
+  }, [time, timerRef, setRunning, play]);
   return (
     <div className="w-[350px] sm:w-full">
       <div className="font-lato flex gap-x-6">

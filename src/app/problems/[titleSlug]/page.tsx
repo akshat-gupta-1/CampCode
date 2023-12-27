@@ -2,7 +2,6 @@
 import { useRef, useState } from 'react';
 import DataCard from './DataCard';
 import CountDown from './CountDown';
-import { trpc } from '@/app/_trpc/client';
 const Page = ({ params }: { params: { titleSlug: string } }) => {
   const [timer, setTimer] = useState<number>(40 * 60 * 1000);
   const [time, setTime] = useState<number>(timer);

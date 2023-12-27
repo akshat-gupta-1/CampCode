@@ -150,3 +150,26 @@ body {
     transform: translateY(-25%) translateX(40%) rotate(1turn);
   }
 }
+#dialog {
+  box-shadow: 0 0 40px -10px #feb062;
+}
+#prompt {
+  animation: prompt-ai ease-in 700ms forwards;
+}
+@keyframes prompt-ai {
+  0% {
+    opacity: 0;
+    height: 0px;
+    display: hidden;
+  }
+  50% {
+    opacity: 0;
+    height: 0px;
+    display: hidden;
+  }
+  100% {
+    opacity: 1;
+    height: 400px;
+    display: block;
+  }
+}

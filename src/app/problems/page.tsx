@@ -1,8 +1,9 @@
 'use client';
-import { FileStack } from 'lucide-react';
+import { FileStack, Loader } from 'lucide-react';
 import { DataTable } from './data-table';
 import { Problem, columns } from './columns';
 import { trpc } from '../_trpc/client';
+import Image from 'next/image';
 const page = () => {
   const query = trpc.problems.dataTable.getProblemData.useQuery();
   console.log(query.data);
@@ -15,6 +16,16 @@ const page = () => {
       {query.data && (
         <div>
           <DataTable data={query.data} columns={columns} />
+        </div>
+      )}
+      {!query.data && (
+        <div className="w-full h-[250px] flex justify-center items-center">
+          <Image
+            src="/svg/Loader.svg"
+            width={35}
+            height={35}
+            alt="spinner"
+          ></Image>
         </div>
       )}
     </div>

@@ -80,8 +80,11 @@ enum Status {
 
 model Tag {
   id       Int       @id @unique @default(autoincrement())
-  name     String
+  name     String    @unique
   problems Problem[]
+
+  @@index([name])
+  @@index([id])
 }
 
 model Problem {
@@ -94,6 +97,9 @@ model Problem {
   Revision   Revision?
   user       User       @relation(fields: [userId], references: [id])
   userId     String
+  notes      String?    @db.VarChar(1500)
+
+  @@index([id])
 }
 
 model Solved {
