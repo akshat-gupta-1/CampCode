@@ -129,7 +129,7 @@ const DataCard = ({
           </CardContent>
         </Card>
         <div className="flex justify-end gap-x-4">
-          <AIPrompt />
+          <AIPrompt titleSlug={title}/>
           <AlertDialog>
             <AlertDialogTrigger
               className="flex items-center px-4 py-2 rounded-md my-10 text-accentM border border-accentM bg-backgroundM hover:bg-accentM hover:text-white font-medium"
