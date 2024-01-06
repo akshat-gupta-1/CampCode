@@ -1,5 +1,5 @@
 'use client';
-import { Command, Sparkles, ArrowRight, X, Smile, Sticker } from 'lucide-react';
+import { Command, Sparkles, ArrowRight, X, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState, useEffect, HTMLAttributes } from 'react';
 import Image from 'next/image';
@@ -131,6 +131,12 @@ const AIPrompt = ({ titleSlug }: { titleSlug: string }) => {
                     )}
                   </div>
                 ))}
+              {error && (
+                <div className="bg-red-200 border border-red-500 text-red-500 p-2 flex items-center rounded-md">
+                  <AlertTriangle className="w-5 h-5 mr-2" />
+                  <span>{error.name} processing the request</span>
+                </div>
+              )}
               {messages.length === 0 && (
                 <div className="text-sm text-sand-8 font-medium flex flex-col gap-y-4">
                   <span className="flex items-center text-base">
