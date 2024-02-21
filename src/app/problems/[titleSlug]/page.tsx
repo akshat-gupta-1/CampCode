@@ -1,7 +1,7 @@
-'use client';
-import { useRef, useState } from 'react';
-import DataCard from './DataCard';
-import CountDown from './CountDown';
+"use client";
+import { useRef, useState } from "react";
+import DataCard from "./DataCard";
+import CountDown from "./CountDown";
 const Page = ({ params }: { params: { titleSlug: string } }) => {
   const [timer, setTimer] = useState<number>(40 * 60 * 1000);
   const [time, setTime] = useState<number>(timer);

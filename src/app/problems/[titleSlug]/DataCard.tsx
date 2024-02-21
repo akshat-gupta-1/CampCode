@@ -1,12 +1,12 @@
-'use client';
-import { trpc } from '@/app/_trpc/client';
-import { Tags, BookText, CheckCircle } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CardSkeleton } from './Skeletons';
-import { cn } from '@/lib/utils';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+"use client";
+import { trpc } from "@/app/_trpc/client";
+import { Tags, BookText, CheckCircle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardSkeleton } from "./Skeletons";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,8 +17,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import AIPrompt from './AIPrompt';
+} from "@/components/ui/alert-dialog";
+import AIPrompt from "./AIPrompt";
 const DataCard = ({
   title,
   timer,
@@ -34,14 +34,24 @@ const DataCard = ({
 }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const revisionParam = searchParams.get("revision");
+  const idParam = searchParams.get("id");
+  const revisionBool = revisionParam === "true" ? true : false;
   const utils = trpc.useUtils();
   const query = trpc.problems.getSpecificProblem.useQuery(title);
   const mutation = trpc.problems.saveProblem.useMutation({
     onSuccess() {
       utils.problems.invalidate();
+      utils.problems.dataTable.invalidate();
     },
   });
-  const handleAdd = () => {
+  const revisionMutation = trpc.revision.addProblem.useMutation({
+    onSuccess() {
+      utils.revision.invalidate();
+    },
+  });
+  const handleAdd = (revisionBool: boolean) => {
     if (query.data) {
       const date = new Date();
       const result = mutation.mutateAsync({
@@ -52,16 +62,35 @@ const DataCard = ({
         date: date.toUTCString(),
         timeTaken: timer - time,
       });
-      toast.promise(result, {
-        loading: 'Saving Problem',
-        success: (data) => {
-          return 'Problem Successfully saved';
-        },
-        error: 'Error',
-      });
-      result.then((value) => {
-        router.push('/problems');
-      });
+      if (revisionBool) {
+        if (idParam) {
+          const res = revisionMutation.mutateAsync({
+            problemId: idParam,
+          });
+          const allPromises = Promise.all([result, res]);
+          toast.promise(allPromises, {
+            loading: "Saving Revised Problem",
+            success: (data) => {
+              return `Successfully Revised Problem`;
+            },
+            error: "Error",
+          });
+          allPromises.then((value) => {
+            router.push("/revision");
+          });
+        }
+      } else {
+        toast.promise(result, {
+          loading: "Saving Problem",
+          success: (data) => {
+            return `Successfully Saved Problem`;
+          },
+          error: "Error",
+        });
+        result.then((value) => {
+          router.push("/problems");
+        });
+      }
     }
   };
   if (query.data) {
@@ -70,7 +99,7 @@ const DataCard = ({
         <Card className="bg-backgroundM">
           <CardHeader>
             <CardTitle className="text-xl">
-              {query.data.data.question.questionFrontendId}.{' '}
+              {query.data.data.question.questionFrontendId}.{" "}
               {query.data.data.question.title}
             </CardTitle>
           </CardHeader>
@@ -81,7 +110,7 @@ const DataCard = ({
                 Tags :
               </h4>
               <div className="flex flex-col gap-y-3">
-                <div className={cn({ 'blur-md': visible === false })}>
+                <div className={cn({ "blur-md": visible === false })}>
                   <div className="flex gap-x-4 flex-wrap gap-y-4">
                     {query.data.data.question.topicTags.map((item) => (
                       <span
@@ -100,7 +129,7 @@ const DataCard = ({
                       setVisible((prev) => !prev);
                     }}
                   >
-                    {visible ? 'Unshow' : 'Show'}
+                    {visible ? "Unshow" : "Show"}
                   </button>
                 </div>
               </div>
@@ -111,16 +140,16 @@ const DataCard = ({
                 Difficulty :
               </h4>
               <span
-                className={cn('p-1.5 font-medium border rounded-md', {
-                  'text-green-700 border-green-700 bg-green-100/50':
+                className={cn("p-1.5 font-medium border rounded-md", {
+                  "text-green-700 border-green-700 bg-green-100/50":
                     query.data.data.question.difficulty.toLowerCase() ===
-                    'easy',
-                  'text-yellow-500 border-yellow-500 bg-yellow-100/50':
+                    "easy",
+                  "text-yellow-500 border-yellow-500 bg-yellow-100/50":
                     query.data.data.question.difficulty.toLowerCase() ===
-                    'medium',
-                  'text-red-500 border-red-500 bg-red-100/50':
+                    "medium",
+                  "text-red-500 border-red-500 bg-red-100/50":
                     query.data.data.question.difficulty.toLowerCase() ===
-                    'hard',
+                    "hard",
                 })}
               >
                 {query.data.data.question.difficulty}
@@ -129,7 +158,7 @@ const DataCard = ({
           </CardContent>
         </Card>
         <div className="flex justify-end gap-x-4">
-          <AIPrompt titleSlug={title}/>
+          <AIPrompt titleSlug={title} />
           <AlertDialog>
             <AlertDialogTrigger
               className="flex items-center px-4 py-2 rounded-md my-10 text-accentM border border-accentM bg-backgroundM hover:bg-accentM hover:text-white font-medium"
@@ -138,7 +167,7 @@ const DataCard = ({
                 setRunning(false);
               }}
             >
-              {' '}
+              {" "}
               <CheckCircle className="w-4 h-4 mr-2" />
               Completed
             </AlertDialogTrigger>
@@ -158,7 +187,7 @@ const DataCard = ({
                 </AlertDialogCancel>
                 <AlertDialogAction
                   className="bg-accentM hover:bg-orange-9 px-8"
-                  onClick={handleAdd}
+                  onClick={() => handleAdd(revisionBool)}
                 >
                   Yes
                 </AlertDialogAction>

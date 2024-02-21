@@ -279,10 +279,10 @@ export const columns: ColumnDef<Problem>[] = [
           <DrawerContent className="font-inter bg-backgroundM h-[700px]">
             <div className="mx-auto w-full max-w-screen-lg h-full relative">
               <DrawerHeader>
-                <DrawerTitle className="underline decoration-wavy underline-offset-6 text-3xl decoration-primaryM">
+                <DrawerTitle className="underline underline-offset-2 text-3xl decoration-primaryM">
                   Add Notes
                 </DrawerTitle>
-                <DrawerDescription className="text-sand-9">
+                <DrawerDescription className="text-sand-9 my-1">
                   Short notes to refrence later.
                 </DrawerDescription>
               </DrawerHeader>

@@ -44,19 +44,19 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  username      String?   @unique
+  username      String?    @unique
   password      String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  email         String?   @unique
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   Problem       Problem[]
-  Revision      Revision?
+  Revision      Revision[]
 }
 
 model VerificationToken {
@@ -115,6 +115,6 @@ model Revision {
   id        String  @id @unique @default(cuid())
   Problem   Problem @relation(fields: [problemId], references: [id])
   user      User    @relation(fields: [userId], references: [id])
-  userId    String  @unique
+  userId    String
   problemId String  @unique
 }

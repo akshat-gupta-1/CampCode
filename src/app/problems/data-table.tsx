@@ -1,6 +1,6 @@
-'use client';
-import * as React from 'react';
-import { trpc } from '../_trpc/client';
+"use client";
+import * as React from "react";
+import { trpc } from "../_trpc/client";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,33 +12,33 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   getPaginationRowModel,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from '@/components/ui/command';
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
+} from "@/components/ui/popover";
 import {
   Table,
   TableBody,
@@ -46,8 +46,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import {
   ArrowRight,
   ArrowLeft,
@@ -55,8 +55,8 @@ import {
   ChevronDown,
   CheckIcon,
   Ghost,
-} from 'lucide-react';
-import { useRouter } from 'next/navigation';
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -67,10 +67,10 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = React.useState("");
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -91,7 +91,7 @@ export function DataTable<TData, TValue>({
     },
     sortingFns: {
       difficulty: (rowA: any, rowB: any, columnId: any): number => {
-        type difficultyType = 'Easy' | 'Medium' | 'Hard';
+        type difficultyType = "Easy" | "Medium" | "Hard";
         const difficultyOrder: Record<difficultyType, number> = {
           Easy: 0,
           Medium: 1,
@@ -123,10 +123,10 @@ export function DataTable<TData, TValue>({
             <input
               placeholder="Search Problem"
               value={
-                (table.getColumn('title')?.getFilterValue() as string) ?? ''
+                (table.getColumn("title")?.getFilterValue() as string) ?? ""
               }
               onChange={(event) =>
-                table.getColumn('title')?.setFilterValue(event.target.value)
+                table.getColumn("title")?.setFilterValue(event.target.value)
               }
               className=" placeholder:text-sand-9 outline-none bg-backgroundM w-full text-sm"
             />
@@ -134,7 +134,7 @@ export function DataTable<TData, TValue>({
           <div className="flex gap-x-3 md:flex-nowrap flex-wrap gap-y-2">
             <Select
               onValueChange={(value) => {
-                table.getColumn('difficulty')?.setFilterValue(value);
+                table.getColumn("difficulty")?.setFilterValue(value);
               }}
             >
               <SelectTrigger className="bg-backgroundM text-sand-9 font-medium min-w-[160px] max-w-[160px] focus-visible:ring-primaryM hover:bg-sand-3 hover:text-text focus:ring-primaryM">
@@ -171,7 +171,7 @@ export function DataTable<TData, TValue>({
                 >
                   {value
                     ? tags?.find((tag) => tag.value === value)?.label
-                    : 'Select Tag'}
+                    : "Select Tag"}
                   <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
                 </Button>
               </PopoverTrigger>
@@ -185,8 +185,8 @@ export function DataTable<TData, TValue>({
                         key={tag.value}
                         value={tag.value}
                         onSelect={(currentValue) => {
-                          table.getColumn('tags')?.setFilterValue(tag.value);
-                          setValue(currentValue === value ? '' : currentValue);
+                          table.getColumn("tags")?.setFilterValue(tag.value);
+                          setValue(currentValue === value ? "" : currentValue);
                           setOpen(false);
                         }}
                         className="aria-selected:bg-sand-3"
@@ -194,8 +194,8 @@ export function DataTable<TData, TValue>({
                         {tag.label}
                         <CheckIcon
                           className={cn(
-                            'ml-auto h-4 w-4',
-                            value === tag.value ? 'opacity-100' : 'opacity-0'
+                            "ml-auto h-4 w-4",
+                            value === tag.value ? "opacity-100" : "opacity-0",
                           )}
                         />
                       </CommandItem>
@@ -268,9 +268,9 @@ export function DataTable<TData, TValue>({
         </div>
         <div className="sm:justify-self-end ">
           <Button
-            variant={'customSolid'}
+            variant={"customSolid"}
             className="rounded-md"
-            onClick={() => router.push('/problems/add-problem')}
+            onClick={() => router.push("/problems/add-problem")}
           >
             Add Problem
           </Button>
@@ -284,17 +284,17 @@ export function DataTable<TData, TValue>({
                 return (
                   <TableHead
                     key={header.id}
-                    className={cn('text-sand-9', {
-                      'w-[400px]': header.id === 'tags',
-                      'w-[350px]': header.id === 'title',
-                      'w-[100px]': header.id === 'difficulty',
+                    className={cn("text-sand-9", {
+                      "w-[400px]": header.id === "tags",
+                      "w-[350px]": header.id === "title",
+                      "w-[100px]": header.id === "difficulty",
                     })}
                   >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 );
@@ -307,14 +307,14 @@ export function DataTable<TData, TValue>({
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
-                data-state={row.getIsSelected() && 'selected'}
+                data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
                     className={cn({
-                      'w-[50px] p-2': cell.column.id === 'delete',
-                      'w-[50px] pr-6 pl-2 py-2': cell.column.id === 'notes',
+                      "w-[50px] p-2": cell.column.id === "delete",
+                      "w-[50px] pr-6 pl-2 py-2": cell.column.id === "notes",
                     })}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
