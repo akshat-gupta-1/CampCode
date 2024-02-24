@@ -1,16 +1,16 @@
-'use client';
-import AuthenticationForm from '@/components/authenticationForm';
-import { trpc } from '@/app/_trpc/client';
+"use client";
+import AuthenticationForm from "@/components/authenticationForm";
+import { trpc } from "@/app/_trpc/client";
 import {
   SignupSchema,
   defaultSignupValues,
   SignupType,
   SigninType,
-} from '@/components/authenticationForm';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { toast } from 'sonner';
+} from "@/components/authenticationForm";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { toast } from "sonner";
 const Page = () => {
   const router = useRouter();
   const mutation = trpc.auth.register.useMutation({});
@@ -18,7 +18,7 @@ const Page = () => {
     const mutationData = data as SignupType;
     const result = mutation.mutateAsync(mutationData);
     toast.promise(result, {
-      loading: 'Loading',
+      loading: "Loading",
       success: (data) => {
         return `Successfully signed up.`;
       },
@@ -27,12 +27,12 @@ const Page = () => {
       },
     });
     result.then(() => {
-      router.push('/auth/signin');
+      router.push("/auth/signin");
     });
   };
   return (
-    <div className="flex justify-around items-center h-[700px] w-full px-4">
-      <Card className="w-[500px]">
+    <div className="flex justify-around items-center h-[700px] w-full sm:px-4">
+      <Card className="w-[500px] bg-backgroundM border-sand-6">
         <CardContent className="mt-4">
           <AuthenticationForm
             type="Signup"
@@ -43,11 +43,11 @@ const Page = () => {
         </CardContent>
         <CardFooter className="-mt-2">
           <div>
-            <span className="text-sm text-slate-500">
+            <span className="text-sm text-sand-9">
               Already have an account?
-            </span>{' '}
+            </span>{" "}
             <Link
-              href={'/auth/signin'}
+              href={"/auth/signin"}
               className="text-sm text-primaryM hover:underline "
             >
               Sign in

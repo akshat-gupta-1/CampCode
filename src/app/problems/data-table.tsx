@@ -57,6 +57,7 @@ import {
   Ghost,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { compareDesc } from "date-fns";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -105,6 +106,11 @@ export function DataTable<TData, TValue>({
         const difficultyB = difficultyOrder[valueB];
 
         return difficultyA - difficultyB;
+      },
+      dateSorter: (rowA: any, rowB: any, columnId: any): number => {
+        const valueA = rowA.getValue(columnId)[0];
+        const valueB = rowB.getValue(columnId)[0];
+        return compareDesc(valueA, valueB);
       },
     },
     initialState: {

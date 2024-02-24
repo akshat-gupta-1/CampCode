@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { CalendarDays, GripHorizontal } from "lucide-react";
+import { CalendarDays, GripHorizontal, Ban } from "lucide-react";
 import ActivityCalender from "react-activity-calendar";
 import { Activity, ThemeInput } from "react-activity-calendar";
 import { Tooltip as ReactTooltip } from "react-tooltip";
@@ -28,7 +28,7 @@ const TabComponent = ({ className, ...props }: props) => {
             <GripHorizontal />
           </TabsTrigger>
           <TabsTrigger value="calender-type">
-            <CalendarDays />
+            <Ban />
           </TabsTrigger>
         </TabsList>
         <TabsContent value="dot-style" className="bg-inherit">

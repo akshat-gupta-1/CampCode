@@ -39,6 +39,9 @@ export const revisionRouter = router({
     }[] = await db.$queryRaw(
       Prisma.sql`SELECT p.title,p.number,p.id,p.difficulty, ARRAY_AGG(t.name) FROM "Problem" p JOIN "_ProblemToTag" pt ON p.id = pt."A" JOIN "Tag" t ON pt."B"= t.id WHERE p."userId"=${req.ctx.session.user.id} AND NOT EXISTS(SELECT r."problemId" FROM "Revision" r WHERE r."userId"=${req.ctx.session.user.id} AND p.id=r."problemId") GROUP BY p.id ORDER BY random() LIMIT 1;`,
     );
+    if (result.length === 0) {
+      return [];
+    }
     const { array_agg, ...data } = {
       tags: result[0].array_agg.map((item) => {
         return { name: item };

@@ -113,7 +113,7 @@ model Solved {
 
 model Revision {
   id        String  @id @unique @default(cuid())
-  Problem   Problem @relation(fields: [problemId], references: [id])
+  Problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
   user      User    @relation(fields: [userId], references: [id])
   userId    String
   problemId String  @unique

@@ -13,7 +13,7 @@ const Page = () => {
         Dashboard{" "}
         <LayoutDashboard className="ml-2 text-accentM fill-primaryM" />
       </h2>
-      <div className="my-6 grid grid-cols-3 gap-6">
+      <div className="my-6 grid md:grid-cols-3 gap-x-6 gap-y-4 grid-cols-1">
         <Card className="bg-backgroundM text-text border-sand-5">
           {basicData ? (
             <CardContent className="py-4">
@@ -22,7 +22,9 @@ const Page = () => {
                   <span className="flex items-center text-sand-9 font-medium">
                     Total Problems Solved
                   </span>
-                  <span className="font-lato font-semibold text-lg">{basicData.problemCount}</span>
+                  <span className="font-lato font-semibold text-lg">
+                    {basicData.problemCount}
+                  </span>
                 </div>
                 <Layers className="w-6 h-6 ml-2 text-sand-9" />
               </div>
@@ -42,7 +44,9 @@ const Page = () => {
                   <span className="flex items-center text-sand-9 font-medium">
                     Total Hours Spent
                   </span>
-                  <span className="font-lato font-semibold text-lg">{basicData.totalTimeSpent}</span>
+                  <span className="font-lato font-semibold text-lg">
+                    {basicData.totalTimeSpent}
+                  </span>
                 </div>
                 <Hourglass className="w-6 h-6 ml-2 text-sand-9" />
               </div>
@@ -55,22 +59,26 @@ const Page = () => {
           )}
         </Card>
         <Card className="bg-backgroundM text-text border-sand-5">
-          {basicData?<CardContent className="py-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <span className="flex items-center text-sand-9 font-medium">
-                  Total Topics Covered
-                </span>
-                <span className="font-lato font-semibold text-lg">{basicData.topicCount}</span>
+          {basicData ? (
+            <CardContent className="py-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <span className="flex items-center text-sand-9 font-medium">
+                    Total Topics Covered
+                  </span>
+                  <span className="font-lato font-semibold text-lg">
+                    {basicData.topicCount}
+                  </span>
+                </div>
+                <Tags className="w-6 h-6 ml-2 text-sand-9" />
               </div>
-              <Tags className="w-6 h-6 ml-2 text-sand-9" />
-            </div>
-          </CardContent>:
+            </CardContent>
+          ) : (
             <CardContent className="flex flex-col py-4 gap-y-2">
               <Skeleton className="w-full h-5" />
               <Skeleton className="w-1/2 h-5" />
             </CardContent>
-          }
+          )}
         </Card>
       </div>
       <TabComponent />

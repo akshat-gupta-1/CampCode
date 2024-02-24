@@ -1,11 +1,12 @@
-'use client';
-import { FileStack, Loader } from 'lucide-react';
-import { DataTable } from './data-table';
-import { Problem, columns } from './columns';
-import { trpc } from '../_trpc/client';
-import Image from 'next/image';
+"use client";
+import { FileStack, Loader } from "lucide-react";
+import { DataTable } from "./data-table";
+import { Problem, columns } from "./columns";
+import { trpc } from "../_trpc/client";
+import Image from "next/image";
 const page = () => {
   const query = trpc.problems.dataTable.getProblemData.useQuery();
+  console.log(query.data);
   return (
     <div className="my-12 flex flex-col gap-y-8">
       <div className="flex items-center">

@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { Prisma } from "@prisma/client";
 
 export const dataTableRouter = router({
-    getTags: protectedProcedure.query(async (req) => {
+  getTags: protectedProcedure.query(async (req) => {
     const result: { name: string }[] = await db.$queryRaw(
       Prisma.sql`SELECT DISTINCT t.name FROM "Problem" p JOIN "_ProblemToTag" pt ON p.id = pt."A" JOIN "Tag" t ON pt."B"= t.id WHERE p."userId" = ${req.ctx.session.user.id};`,
     );
@@ -19,7 +19,10 @@ export const dataTableRouter = router({
   getProblemData: protectedProcedure.query(async (req) => {
     const result = await db.problem.findMany({
       where: { userId: req.ctx.session.user.id },
-      include: { Solved: true, tags: true },
+      include: {
+        Solved: true,
+        tags: true,
+      },
     });
     const data = result.map((item) => {
       return {

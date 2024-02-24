@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   CircleDot,
   File,
@@ -12,7 +12,7 @@ import {
   Check,
   FileText,
   X,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Drawer,
   DrawerContent,
@@ -21,19 +21,19 @@ import {
   DrawerTitle,
   DrawerTrigger,
   DrawerClose,
-} from '@/components/ui/drawer';
-import { Textarea } from '@/components/ui/textarea';
-import { ColumnDef } from '@tanstack/react-table';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { differencFn } from '@/lib/dateDifferenceFn';
-import { format } from 'date-fns';
+} from "@/components/ui/drawer";
+import { Textarea } from "@/components/ui/textarea";
+import { ColumnDef } from "@tanstack/react-table";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { differencFn } from "@/lib/dateDifferenceFn";
+import { format } from "date-fns";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from "@/components/ui/tooltip";
 enum Difficulty {
   Easy,
   Medium,
@@ -44,17 +44,17 @@ export type Problem = {
   frontendId: number;
   title: string;
   tags: string[];
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  status: ('Yes' | 'No' | null)[];
+  difficulty: "Easy" | "Medium" | "Hard";
+  status: ("Yes" | "No" | null)[];
   practiceDate: string[];
   notes: string | null;
 };
-import Link from 'next/link';
-import { trpc } from '../_trpc/client';
-import { toast } from 'sonner';
+import Link from "next/link";
+import { trpc } from "../_trpc/client";
+import { toast } from "sonner";
 export const columns: ColumnDef<Problem>[] = [
   {
-    accessorKey: 'status',
+    accessorKey: "status",
     header: () => {
       return (
         <div className="flex items-center">
@@ -64,20 +64,20 @@ export const columns: ColumnDef<Problem>[] = [
       );
     },
     cell: ({ row }) => {
-      const status: ('Yes' | 'No')[] = row.getValue('status');
-      if (status[status.length - 1] === 'Yes') {
+      const status: ("Yes" | "No")[] = row.getValue("status");
+      if (status[status.length - 1] === "Yes") {
         return <CheckCircle2 className="text-green-500" />;
       }
     },
   },
   {
-    accessorKey: 'title',
+    accessorKey: "title",
     header: ({ column }) => {
       return (
         <Button
-          variant={'ghost'}
+          variant={"ghost"}
           className="hover:bg-sand-3 px-2 py-1"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           <File className="w-4 h-4 mr-1" />
           Problem
@@ -86,7 +86,7 @@ export const columns: ColumnDef<Problem>[] = [
       );
     },
     cell: ({ row }) => {
-      const title: string = row.getValue('title');
+      const title: string = row.getValue("title");
       const rowData = row.original;
       return (
         <Link
@@ -94,17 +94,17 @@ export const columns: ColumnDef<Problem>[] = [
           href={`https://leetcode.com/problems/${title}`}
           target="_blank"
         >
-          {rowData.frontendId}.{' '}
+          {rowData.frontendId}.{" "}
           {title
-            .replace(/-/g, ' ')
+            .replace(/-/g, " ")
             .replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase())}
         </Link>
       );
     },
-    sortingFn: 'alphanumeric',
+    sortingFn: "alphanumeric",
   },
   {
-    accessorKey: 'tags',
+    accessorKey: "tags",
     header: () => {
       return (
         <div className="flex items-center">
@@ -114,7 +114,7 @@ export const columns: ColumnDef<Problem>[] = [
       );
     },
     cell: ({ row }) => {
-      const tags: string[] = row.getValue('tags');
+      const tags: string[] = row.getValue("tags");
       return (
         <div className="flex flex-wrap text-sm gap-y-1">
           {tags.map((item, index) => (
@@ -123,9 +123,9 @@ export const columns: ColumnDef<Problem>[] = [
               className="px-2 py-1 bg-orange-3 text-orange-10 mx-1 rounded-md"
             >
               {item
-                .replace(/-/g, ' ')
+                .replace(/-/g, " ")
                 .replace(/(^\w{1})|(\s+\w{1})/g, (letter) =>
-                  letter.toUpperCase()
+                  letter.toUpperCase(),
                 )}
             </span>
           ))}
@@ -133,16 +133,16 @@ export const columns: ColumnDef<Problem>[] = [
       );
     },
     enableColumnFilter: true,
-    filterFn: 'arrIncludes',
+    filterFn: "arrIncludes",
   },
   {
-    accessorKey: 'difficulty',
+    accessorKey: "difficulty",
     header: ({ column }) => {
       return (
         <Button
-          variant={'ghost'}
+          variant={"ghost"}
           className="hover:bg-sand-3 px-2 py-1"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           <Book className="w-4 h-4 mr-1" />
           Difficulty
@@ -151,29 +151,29 @@ export const columns: ColumnDef<Problem>[] = [
       );
     },
     cell: ({ row }) => {
-      const difficulty: 'Easy' | 'Hard' | 'Medium' = row.getValue('difficulty');
+      const difficulty: "Easy" | "Hard" | "Medium" = row.getValue("difficulty");
       return (
         <div
-          className={cn('font-medium', {
-            'text-green-500': difficulty === 'Easy',
-            'text-yellow-400': difficulty === 'Medium',
-            'text-red-500': difficulty === 'Hard',
+          className={cn("font-medium", {
+            "text-green-500": difficulty === "Easy",
+            "text-yellow-400": difficulty === "Medium",
+            "text-red-500": difficulty === "Hard",
           })}
         >
           {difficulty}
         </div>
       );
     },
-    sortingFn: 'difficulty',
+    sortingFn: "difficulty",
   },
   {
-    accessorKey: 'practiceDate',
+    accessorKey: "practiceDate",
     header: ({ column }) => {
       return (
         <Button
-          variant={'ghost'}
+          variant={"ghost"}
           className="hover:bg-sand-3 px-2 py-1"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           <History className="w-4 h-4 mr-1" />
           Last Practice
@@ -182,7 +182,7 @@ export const columns: ColumnDef<Problem>[] = [
       );
     },
     cell: ({ row }) => {
-      const dateValue: string[] = row.getValue('practiceDate');
+      const dateValue: string[] = row.getValue("practiceDate");
       if (dateValue.length === 1) {
         const date = new Date(dateValue[0]);
         const today = new Date();
@@ -208,7 +208,7 @@ export const columns: ColumnDef<Problem>[] = [
                   className="flex flex-col gap-y-1"
                 >
                   <div>
-                    Total Practices:{' '}
+                    Total Practices:{" "}
                     <span className="text-accentM">{dateValue.length}</span>
                   </div>
                   <ul className="gap-y-1 flex flex-col">
@@ -219,7 +219,7 @@ export const columns: ColumnDef<Problem>[] = [
                           strokeWidth={2.5}
                         />
                         {/* @ts-ignore */}
-                        {format(item, 'dd-MM-yyyy')}
+                        {format(item, "dd-MM-yyyy")}
                       </li>
                     ))}
                   </ul>
@@ -230,10 +230,10 @@ export const columns: ColumnDef<Problem>[] = [
         );
       }
     },
-    sortingFn: 'datetime',
+    sortingFn: "dateSorter",
   },
   {
-    id: 'delete',
+    id: "delete",
     cell: ({ row }) => {
       const problem = row.original;
       const utils = trpc.useUtils();
@@ -248,9 +248,9 @@ export const columns: ColumnDef<Problem>[] = [
           onClick={() => {
             const result = mutation.mutateAsync({ id: problem.id });
             toast.promise(result, {
-              loading: 'Deleting problem',
-              success: 'Successfully deleted the problem',
-              error: 'Error deleting the problem',
+              loading: "Deleting problem",
+              success: "Successfully deleted the problem",
+              error: "Error deleting the problem",
             });
           }}
         >
@@ -260,7 +260,7 @@ export const columns: ColumnDef<Problem>[] = [
     },
   },
   {
-    id: 'notes',
+    id: "notes",
     cell: ({ row }) => {
       const rowData = row.original;
       const utils = trpc.useUtils();
@@ -289,7 +289,7 @@ export const columns: ColumnDef<Problem>[] = [
               <div className="w-full h-full">
                 <Textarea
                   id="notes"
-                  defaultValue={rowData.notes ? rowData.notes : ''}
+                  defaultValue={rowData.notes ? rowData.notes : ""}
                   placeholder="Write something....."
                   className="focus-within:ring-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-backgroundM resize-none h-full placeholder:text-sand-9 p-4 text-lg placeholder:text-lg"
                 />
@@ -300,21 +300,21 @@ export const columns: ColumnDef<Problem>[] = [
                   id="saveButton"
                   onClick={() => {
                     const input = document.getElementById(
-                      'notes'
+                      "notes",
                     ) as HTMLTextAreaElement;
                     if (input.value && input.value) {
-                      console.log('hello');
+                      console.log("hello");
                       const result = mutation.mutateAsync({
                         id: rowData.id,
                         notes: input.value,
                       });
                       toast.promise(result, {
-                        loading: 'Saving note..',
-                        success: 'Successfully saved!',
-                        error: 'Error while saving!',
+                        loading: "Saving note..",
+                        success: "Successfully saved!",
+                        error: "Error while saving!",
                       });
                       result.then((value) => {
-                        document.getElementById('close')?.click();
+                        document.getElementById("close")?.click();
                       });
                     }
                   }}

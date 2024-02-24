@@ -35,18 +35,21 @@ const Page = () => {
         Revise already attempted problems.
       </p>
       <Tabs defaultValue="all">
-        <div className="flex justify-between items-center max-w-[1000px]">
+        <div className="md:flex flex-col md:flex-row justify-between items-center max-w-[1000px]">
           <TabsList className="my-4 w-full max-w-[300px] grid grid-cols-2">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="Recommendation">Recommendation</TabsTrigger>
           </TabsList>
           <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button className="bg-orange-100 text-accentM hover:bg-accentM hover:text-white hover:scale-95 ">
-                <ListRestart className="mr-1.5" />
-                Reset
-              </Button>
-            </AlertDialogTrigger>
+            <div className="w-full md:w-auto flex justify-end">
+              {" "}
+              <AlertDialogTrigger asChild>
+                <Button className="bg-orange-100 text-accentM hover:bg-accentM hover:text-white hover:scale-95  ">
+                  <ListRestart className="mr-1.5" />
+                  Reset
+                </Button>
+              </AlertDialogTrigger>
+            </div>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
@@ -82,11 +85,11 @@ const Page = () => {
         </TabsContent>
         <TabsContent value="Recommendation">
           <div className="flex  max-w-[1000px] py-4 px-8 bg-sand-3 rounded-md border border-sand-6 text-sand-9 mb-4">
-            <div className="w-5 h-5 mr-2">
+            <div className="w-5 h-5 mr-2 font-medium">
               <AlertOctagon />
             </div>
             <p>
-              Please Note:
+              <span className="font-medium">Please Note:</span>
               <br />
               For less number of problems it may recommend same problems. Please
               keep that in mind and attempt more problems.

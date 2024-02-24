@@ -109,7 +109,7 @@ const Charts = () => {
   ];
   return (
     <div>
-      <div className="my-8 grid grid-cols-3 gap-x-6">
+      <div className="my-8 grid md:grid-cols-3 grid-cols-1 gap-x-6 gap-y-4">
         <CardTremor className="bg-backgroundM border-sand-5 ring-transparent border p-4 text-sand-11 font-medium">
           <h5 className="text-sand-9 font-medium">Difficulty</h5>
           <Separator className="my-2 bg-sand-5" />
@@ -131,7 +131,7 @@ const Charts = () => {
             </>
           )}
         </CardTremor>
-        <Card className="col-span-2 bg-backgroundM border-sand-5 ">
+        <Card className="md:col-span-2 col-span-1 bg-backgroundM border-sand-5 ">
           <CardContent className="p-4">
             <h4 className="text-sand-9 font-medium">Daily Recommendation</h4>
             <Separator className="my-2 bg-sand-5" />
@@ -218,8 +218,8 @@ const Charts = () => {
           </CardContent>
         </Card>
       </div>
-      <div className="grid grid-cols-3 my-8 gap-x-6">
-        <div className="col-span-2">
+      <div className="grid md:grid-cols-3 grid-cols-1 gap-y-4 my-8 gap-x-6">
+        <div className="md:col-span-2 col-span-1">
           <CardTremor className="bg-backgroundM border-sand-5 ring-transparent border p-4 text-sand-11 font-medium">
             <h5 className="text-sand-9 font-medium">Time spent every day</h5>
             {lineChartData ? (
@@ -237,10 +237,10 @@ const Charts = () => {
             )}
           </CardTremor>
         </div>
-        <CardTremor className="bg-backgroundM border-sand-5 ring-transparent border p-4 text-sand-11 font-medium">
+        <CardTremor className="bg-backgroundM border-sand-5 ring-transparent border p-4 text-sand-11 font-medium  ">
           <h5 className="text-sand-9 font-medium">Types of Topics</h5>
           <Separator className="my-2 bg-sand-5" />
-          <div className="h-[275px] w-full justify-center items-center">
+          <div className="h-[275px]  w-full justify-center items-center">
             {donutData ? (
               <DonutChart
                 data={donutData}
