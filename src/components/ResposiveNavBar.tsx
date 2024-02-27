@@ -33,7 +33,7 @@ const ResponsiveNav = ({ Links, State, status, setState }: Props) => {
               duration: 0.8,
             }}
             className={cn(
-              "fixed top-[57px] bg-backgroundM w-full h-[420px] left-0 bottom-0 mt-1 z-1 px-4 rounded-b-xl shadow-sm border-x border-b border-sand-6 md:hidden block",
+              "fixed top-[57px] bg-backgroundM w-full h-[340px] left-0 bottom-0 mt-1 z-1 px-4 rounded-b-xl shadow-sm border-x border-b border-sand-6 md:hidden block",
               {
                 "h-52 top-[58px]": status === "authenticated",
               },

@@ -209,3 +209,7 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
     hsl(30deg 99% 49%) 100%
   );
 }
+html {
+  --scroll-behavior: smooth !important;
+  scroll-behavior: smooth !important;
+}

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -8,12 +8,11 @@ import Link from "next/link";
 import NavBarDropDown from "./NavBarDropDown";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import ResponsiveNav from "./ResposiveNavBar";
 const NavLinks = [
   { name: "Product", href: "#get-started" },
   { name: "Features", href: "#features" },
-  { name: "Pricing", href: "#pricing" },
   { name: "Contact", href: "#contact" },
 ];
 const AuthenticatedLinks = [
@@ -22,6 +21,7 @@ const AuthenticatedLinks = [
   { name: "Revision", href: "/revision" },
 ];
 const Navbar = () => {
+  const [activeSection, setActiveSection] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -32,6 +32,28 @@ const Navbar = () => {
     }
     return path.startsWith(href);
   };
+  useEffect(() => {
+    const sections = ["product", "features", "contact"];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5 },
+    );
+    sections.forEach((section) => {
+      const s = document.getElementById(section);
+      if (s) {
+        observer.observe(s);
+      }
+    });
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
   if (status === "authenticated" && path.includes("/") && path !== "/") {
     return (
       <div className="border-b border-sand-4 sticky inset-x-0 top-0 z-30 bg-backgroundM font-inter">
@@ -121,10 +143,34 @@ const Navbar = () => {
           <span className="text-text">Camp</span>
           <span className="text-accentM">Code</span>
         </div>
-        <ul className="md:flex text-sm border border-sand-8 rounded-full text-sand-11 font-medium hidden">
+        <ul className="md:flex text-sm border border-sand-8 rounded-full  font-medium hidden p-1">
           {NavLinks.map((item, index) => (
-            <li key={index} className="py-2 px-4">
-              <a href={item.href}>{item.name}</a>
+            <li key={index} className="py-2 px-4 relative">
+              <Link
+                href={item.href}
+                className={cn("z-10 text-sand-11", {
+                  "text-white": activeSection === item.name.toLowerCase(),
+                })}
+              >
+                <AnimatePresence>
+                  {activeSection === item.name.toLowerCase() && (
+                    <motion.span
+                      className="absolute inset-0 bg-accentM h-full w-full rounded-full -z-10 "
+                      layoutId="hoverBackground"
+                      initial={{ opacity: 0 }}
+                      animate={{
+                        opacity: 1,
+                        transition: { duration: 0.15 },
+                      }}
+                      exit={{
+                        opacity: 0,
+                        transition: { duration: 0.15, delay: 0.2 },
+                      }}
+                    />
+                  )}
+                </AnimatePresence>
+                <span>{item.name}</span>
+              </Link>
             </li>
           ))}
         </ul>

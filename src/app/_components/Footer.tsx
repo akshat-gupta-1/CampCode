@@ -2,7 +2,10 @@ import { Copyright, Heart } from "lucide-react";
 const Footer = () => {
   return (
     <>
-      <div className="bg-sand-3 w-full md:h-[300px] rounded-2xl mb-6">
+      <div
+        className="bg-sand-3 w-full md:h-[300px] rounded-2xl mb-6"
+        id="contact"
+      >
         <div className="grid md:grid-cols-4 grid-cols-2  w-full h-full p-8 gap-y-8">
           <div className="flex flex-col justify-center gap-y-6 md:col-span-1 col-span-2">
             <h5 className="font-medium">
